@@ -76,8 +76,27 @@ public class CartServlet extends HttpServlet {
 				}
 			}
 			if (action.equals("show")) {
-				showCart(request, response);
+				request.getRequestDispatcher("/cart.jsp").forward(request, response);
 			}
+			if(action.equals("delete")){
+				if(deleteFromCart(request, response)){
+					request.getRequestDispatcher("/cart.jsp").forward(request, response);					
+				}else{
+					request.getRequestDispatcher("/cart.jsp").forward(request, response);
+				}
+			}
+		}
+	}
+
+	private boolean deleteFromCart(HttpServletRequest request, HttpServletResponse response) {
+		// TODO Auto-generated method stub
+		String id = request.getParameter("id");
+		Cart cart = (Cart)request.getSession().getAttribute("cart");
+		Items item = idao.getItemsById(Integer.parseInt(id));
+		if(cart.removeGoodsFromCart(item)){
+			return true;
+		}else{
+			return false;
 		}
 	}
 
